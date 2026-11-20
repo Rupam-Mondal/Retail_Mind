@@ -1,2 +1,4 @@
 *.joblib
 *.csv
+data/
+models/

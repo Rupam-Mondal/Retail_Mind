@@ -123,5 +123,58 @@ The purpose of this comparison was not to assume that the ANN would automaticall
 The trained ANN was saved using the Keras model format, while the fitted preprocessing pipeline was saved separately so that future customer data can be transformed in exactly the same way before inference.
 
 This comparison provides a practical basis for deciding whether a classical machine learning model or an ANN is more suitable for the current churn prediction workload.
+---
+
+## Day 6 - CNN-Based Fashion Product Classification
+
+Day 6 introduced computer vision into RetailMind AI by developing a Convolutional Neural Network (CNN) for fashion product classification.
+
+The increment started with a small Fashion-MNIST prototype to validate the CNN architecture before moving to the actual fashion product dataset.
+
+The Fashion Product Images dataset was then used to build the real product classification pipeline. Images were loaded, resized, normalized, and prepared for training. Data augmentation was also introduced to improve the model's ability to generalize across different product images.
+
+A custom CNN architecture was developed using the following components:
+
+**-** Convolutional layers for extracting image features  
+**-** Max pooling layers for reducing spatial dimensions  
+**-** Dropout for regularization  
+**-** Dense layers for product category classification  
+**-** Softmax output for predicting product categories
+
+The model was designed to classify fashion products into their respective categories using the prepared image dataset.
+
+Performance evaluation included accuracy, classification reports, and a confusion matrix to understand which product categories were correctly classified and where the model made mistakes.
+
+The trained classifier was designed to serve as the first computer vision module of RetailMind AI, extending the project beyond customer churn prediction into image-based product understanding.
+
+---
+
+## Day 7 - Transfer Learning with MobileNetV2
+
+Day 7 focused on improving the fashion product classification system using Transfer Learning.
+
+Instead of training an entire CNN architecture from scratch, a pretrained MobileNetV2 model was introduced as the backbone for extracting image features.
+
+MobileNetV2 is a lightweight Convolutional Neural Network pretrained on the ImageNet dataset. Its learned visual features were reused to build a product classification model for RetailMind AI.
+
+The Fashion Product Images dataset from Day 6 was reused so that both approaches could be evaluated on the same classification problem.
+
+The transfer learning pipeline included:
+
+**-** Loading MobileNetV2 with pretrained ImageNet weights  
+**-** Removing the original classification layer using `include_top=False`  
+**-** Freezing the pretrained backbone during initial training  
+**-** Adding a custom classification head for fashion product categories  
+**-** Training the new classification layers on the fashion product dataset
+
+The model was trained to recognize product categories using the features extracted by MobileNetV2.
+
+The main objective was to compare the transfer learning approach against the custom CNN developed in Day 6.
+
+Both models were evaluated using accuracy, classification reports, and confusion matrices. Training performance and model accuracy were also considered to understand the benefits of reusing pretrained image features instead of learning everything from scratch.
+
+The upgraded classifier was designed to be saved as the RetailMind vision model so that it could be reused in future computer vision workflows.
+
+This increment demonstrated how transfer learning can be applied to image classification while reducing the need to train a deep neural network entirely from scratch.
 
 ---
