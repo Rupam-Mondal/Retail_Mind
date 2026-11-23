@@ -178,3 +178,88 @@ The upgraded classifier was designed to be saved as the RetailMind vision model 
 This increment demonstrated how transfer learning can be applied to image classification while reducing the need to train a deep neural network entirely from scratch.
 
 ---
+
+## Day 8 - Explainable AI with Grad-CAM
+
+Day 8 focused on making the computer vision module of RetailMind AI more explainable by introducing Grad-CAM (Gradient-weighted Class Activation Mapping).
+
+Instead of only predicting product categories, the objective was to understand which regions of a product image influenced the model's prediction.
+
+The trained MobileNetV2 classifier developed during Day 7 was reused for this increment. No additional model training was required.
+
+Grad-CAM was implemented using the gradients flowing into the final convolutional feature maps of the pretrained MobileNetV2 backbone. These gradients were used to generate class activation heatmaps highlighting the image regions that contributed most to the predicted category.
+
+The explainability workflow included:
+
+**-** Loading the trained Day 7 MobileNetV2 classifier  
+**-** Loading and preprocessing fashion product images  
+**-** Generating product category predictions  
+**-** Computing Grad-CAM heatmaps for selected product images  
+**-** Generating heatmap overlays on the original images using Matplotlib  
+**-** Visualizing the original image, heatmap, and combined overlay
+
+The heatmaps provided a visual understanding of which image regions influenced the model's classification decisions.
+
+The Grad-CAM functionality was also integrated into the RetailMind vision module through a reusable function that combines image preprocessing, prediction, heatmap generation, and visualization.
+
+Image segmentation and background removal were covered conceptually but were not implemented in this increment.
+
+This increment extended RetailMind AI beyond image classification by introducing model explainability, making computer vision predictions easier to inspect and interpret.
+
+---
+
+## Day 9 - RNN / LSTM Demand Forecasting
+
+Day 9 introduced time-series forecasting into RetailMind AI by developing a Long Short-Term Memory (LSTM) model to predict future product demand.
+
+The Store Item Demand Forecasting dataset was used to understand historical sales patterns and forecast future sales. The dataset contains daily sales information across multiple stores and products.
+
+The sales data was loaded, cleaned, and prepared using Pandas. Daily sales records were organized into individual store-product time series so that the model could learn demand patterns for a selected store and product combination.
+
+Before training, the time-series data was scaled and divided chronologically into training, validation, and testing sets to preserve the natural order of historical sales and avoid data leakage.
+
+Supervised learning windows were created using a look-back approach, where the previous 30 days of sales were used to predict the next day's demand.
+
+An LSTM-based neural network was developed using the following components:
+
+**-** Input layer for sequential sales data  
+**-** LSTM layers for learning temporal patterns and dependencies  
+**-** Dropout for regularization and reducing overfitting  
+**-** Dense hidden layer with ReLU activation  
+**-** Output layer for predicting next-period sales
+
+The model was trained using the Adam optimizer and Mean Squared Error (MSE) loss. Early stopping and learning rate reduction were used to monitor validation performance and improve training efficiency.
+
+The trained forecasting model was evaluated using regression metrics such as:
+
+**-** Mean Absolute Error (MAE)  
+**-** Root Mean Squared Error (RMSE)
+
+Actual sales and predicted sales were also visualized to understand how closely the model followed historical demand patterns and to identify potential forecasting errors.
+
+The trained LSTM model was saved in the forecasting module along with the scaling information and other metadata required for future predictions.
+
+A reusable forecasting function was also developed in `src/demand_forecaster.py` to load the trained model and generate future demand predictions.
+
+This increment extended RetailMind AI beyond customer churn prediction and computer vision by introducing time-series demand forecasting to support inventory planning and data-driven retail decisions.
+
+---
+
+---
+
+## Day 10 - Seq2Seq and Attention Demand Forecasting
+
+Day 10 extended RetailMind AI demand forecasting from next-day prediction to multi-step forecasting using an LSTM encoder-decoder architecture with an attention mechanism. The Store Item Demand Forecasting dataset was reused with the selected store and product series from Day 9.
+
+A 30-day historical window was encoded and the model generated a 14-day forecast. The encoder-decoder model used teacher forcing during training and autoregressive prediction during inference. A temporal attention layer assigned weights to historical encoder states for each forecast step.
+
+On held-out test windows, the Day 10 model achieved MAE 4.955, RMSE 6.270, and MAPE 23.49% across the full forecast horizon. The Day 9 single-step LSTM, recursively applied over the same test windows, achieved MAE 5.065, RMSE 6.401, and MAPE 23.23%. Detailed horizon-wise results are saved in the Day 10 reports.
+
+Attention weights were visualized to inspect which historical days influenced each forecast step. The reusable `src/demand_forecaster.py` module was upgraded to load the Seq2Seq attention model and generate multi-week forecasts for procurement and inventory planning.
+
+- Model: `models/forecasting/retailmind_seq2seq_attention.keras`
+- Metadata: `models/forecasting/retailmind_seq2seq_metadata.json`
+- Forecast module: `src/demand_forecaster.py`
+- Forecast output: `reports/day10_seq2seq_attention/multi_week_demand_forecast.csv`
+- Attention visualization: `reports/day10_seq2seq_attention/attention_weights.png`
+- Evaluation reports: `reports/day10_seq2seq_attention/`
