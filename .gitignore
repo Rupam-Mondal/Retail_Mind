@@ -3,3 +3,4 @@
 data/
 models/
 reports/day11_image_augmentation/
+.env
